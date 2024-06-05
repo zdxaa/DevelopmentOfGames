@@ -11,27 +11,23 @@ export class TouchController extends Component {
 
     private startTouchPos: Vec2 | null = null;
     private touchInProgress: boolean = false;
-
+    /**大圆的半径 */
+    private circleRadius: number = 0;
     onLoad() {
         this.bigCircle.on(Node.EventType.TOUCH_START, this.onTouchStart, this);
         this.bigCircle.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.bigCircle.on(Node.EventType.TOUCH_END, this.onTouchEnd, this);
         this.bigCircle.on(Node.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
+        this.circleRadius = this.bigCircle.getComponent(UITransform)!.contentSize.width / 2 * this.node.scale.x
     }
 
 
     onTouchStart(event: EventTouch) {
         const touchPos = event.getUILocation();
-        const uiTransform = this.bigCircle!.getComponent(UITransform);
         const circlePos = this.bigCircle!.getWorldPosition();
-        const circleRadius = uiTransform!.contentSize.width / 2;
-        console.log(`Touch position: ${touchPos}`);
-        // Check if touch is within big circle
-        if (Vec2.distance(new Vec2(touchPos.x, touchPos.y), new Vec2(circlePos.x, circlePos.y)) <= circleRadius) {
+        if (Vec2.distance(new Vec2(touchPos.x, touchPos.y), new Vec2(circlePos.x, circlePos.y)) <= this.circleRadius) {
             this.startTouchPos = new Vec2(touchPos.x, touchPos.y);
             this.touchInProgress = true;
-
-            // Display small circle at touch position
             this.smallCircle!.setWorldPosition(new Vec3(touchPos.x, touchPos.y, 0));
         }
     }
@@ -39,11 +35,8 @@ export class TouchController extends Component {
 
     onTouchMove(event: EventTouch) {
         if (!this.touchInProgress) return;
-
         const touchPos = event.getUILocation();
-        const uiTransform = this.bigCircle!.getComponent(UITransform);
         const circlePos = this.bigCircle!.getWorldPosition();
-        const circleRadius = uiTransform!.contentSize.width / 2;
 
         // Calculate the direction vector from the center of the circle to the touch position
         const direction = new Vec2(touchPos.x - circlePos.x, touchPos.y - circlePos.y);
@@ -52,7 +45,7 @@ export class TouchController extends Component {
         const distance = direction.length();
 
         // Calculate the maximum and minimum allowed distances from the center of the circle
-        const maxDistance = circleRadius;
+        const maxDistance = this.circleRadius
         const minDistance = 0;
 
         // Clamp the distance to the maximum and minimum allowed distances
@@ -73,9 +66,6 @@ export class TouchController extends Component {
 
         this.touchInProgress = false;
         // Move small circle back to original position
-        const uiTransform = this.bigCircle!.getComponent(UITransform);
-        const circlePos = this.bigCircle!.getWorldPosition();
-        const circleRadius = uiTransform!.contentSize.width / 2;
         const originalPos = new Vec3(0, 0, 0);
         tween(this.smallCircle)
             .to(0.1, { position: originalPos })
