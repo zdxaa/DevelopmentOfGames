@@ -26,7 +26,9 @@ export class TouchController extends Component {
     onTouchStart(event: EventTouch) {
         const touchPos = event.getUILocation();
         const circlePos = this.bigCircle!.getWorldPosition();
-        if (Vec2.distance(new Vec2(touchPos.x, touchPos.y), new Vec2(circlePos.x, circlePos.y)) <= this.circleRadius) {
+        let circlePosLocal = circlePos
+        let length = Vec2.distance(new Vec2(touchPos.x, touchPos.y), new Vec2(circlePosLocal.x, circlePosLocal.y))
+        if (length <= this.circleRadius) {
             this.startTouchPos = new Vec2(touchPos.x, touchPos.y);
             this.touchInProgress = true;
             this.smallCircle!.setWorldPosition(new Vec3(touchPos.x, touchPos.y, 0));
@@ -38,27 +40,21 @@ export class TouchController extends Component {
         if (!this.touchInProgress) return;
         const touchPos = event.getUILocation();
         const circlePos = this.bigCircle!.getWorldPosition();
-
-        // Calculate the direction vector from the center of the circle to the touch position
-        const direction = new Vec2(touchPos.x - circlePos.x, touchPos.y - circlePos.y);
-
-        // Calculate the distance from the center of the circle to the touch position
+        let circlePosLocal = circlePos
+        const direction = new Vec2(touchPos.x - circlePosLocal.x, touchPos.y - circlePosLocal.y);
         const distance = direction.length();
-
-        // Calculate the maximum and minimum allowed distances from the center of the circle
         const maxDistance = this.circleRadius
         const minDistance = 0;
-
-        // Clamp the distance to the maximum and minimum allowed distances
         const clampedDistance = Math.min(Math.max(distance, minDistance), maxDistance);
 
-        // Calculate the new position of the small circle based on the clamped distance
-        const clampedPos = new Vec3(circlePos.x + direction.x * (clampedDistance / distance), circlePos.y + direction.y * (clampedDistance / distance), 0);
+        let clampX = circlePosLocal.x + direction.x * (clampedDistance / distance)
+        let clampY = circlePosLocal.y + direction.y * (clampedDistance / distance)
+        const clampedPos = new Vec3(clampX, clampY, 0);
 
         // Move small circle to clamped position
         this.smallCircle!.setWorldPosition(clampedPos);
 
-        this.moveCharacter(new Vec2(clampedPos.x - this.startTouchPos!.x, clampedPos.y - this.startTouchPos!.y));
+        this.moveCharacter(new Vec3(clampedPos.x - this.startTouchPos!.x, clampedPos.y - this.startTouchPos!.y));
     }
 
 
@@ -72,7 +68,7 @@ export class TouchController extends Component {
             .to(0.1, { position: originalPos })
             .start();
     }
-    moveCharacter(direction: Vec2) {
+    moveCharacter(direction: Vec3) {
         // Implement character movement based on direction vector
         // This could involve setting velocity, moving a position directly, etc.
         // For now, we'll just log the direction
