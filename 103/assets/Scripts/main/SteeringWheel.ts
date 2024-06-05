@@ -1,4 +1,5 @@
 import { _decorator, Component, Node, Vec2, Vec3, UITransform, EventTouch, tween } from 'cc';
+import { EventMgr } from '../tools/EventMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TouchController')
@@ -75,6 +76,6 @@ export class TouchController extends Component {
         // Implement character movement based on direction vector
         // This could involve setting velocity, moving a position directly, etc.
         // For now, we'll just log the direction
-        console.log(`Character should move in direction: ${direction}`);
+        EventMgr.emit('CharacterMove', direction);
     }
 }
