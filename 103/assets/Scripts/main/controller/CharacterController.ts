@@ -1,8 +1,8 @@
 import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director, Animation, misc, Vec2, input, EventKeyboard, KeyCode, Input } from 'cc'
+import { EventMgr } from '../../Utils/EventMgr'
+import { Config } from '../../Utils/Config'
+import { bulletsCtr } from './bulletsCtr'
 const { ccclass, property } = _decorator
-import { EventMgr } from '../Utils/EventMgr'
-import { Config } from '../Utils/Config'
-import { bulletsCtr } from './controller/bulletsCtr'
 const currentScene = director.getScene()
 @ccclass('CharacterController')
 export class CharacterController extends Component {

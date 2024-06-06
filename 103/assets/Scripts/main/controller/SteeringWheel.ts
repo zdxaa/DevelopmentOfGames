@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Vec2, Vec3, UITransform, EventTouch, tween } from 'cc';
-import { EventMgr } from '../Utils/EventMgr';
+import { EventMgr } from '../../Utils/EventMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TouchController')
