@@ -1,17 +1,17 @@
 [
   {
     "__type__": "cc.AnimationClip",
-    "_name": "boy_3",
+    "_name": "boy_4",
     "_objFlags": 0,
     "__editorExtras__": {
       "embeddedPlayerGroups": []
     },
     "_native": "",
     "sample": 60,
-    "speed": 0.05,
+    "speed": 0.1,
     "wrapMode": 2,
     "enableTrsBlending": false,
-    "_duration": 0.05,
+    "_duration": 0.06666666666666667,
     "_hash": 500763545,
     "_tracks": [
       {
@@ -61,21 +61,21 @@
   {
     "__type__": "cc.ObjectCurve",
     "_times": [
-      0,
       0.016666666666666666,
-      0.03333333333333333
+      0.03333333333333333,
+      0.05
     ],
     "_values": [
       {
-        "__uuid__": "f478a888-79ce-4f1e-9d9e-7688778201f3@f9941",
+        "__uuid__": "ffa9ee52-4d8c-45ac-a062-2a709b5b5a5c@f9941",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "257058f9-6c34-4dd2-b56d-f86a4884ed41@f9941",
+        "__uuid__": "62dbed88-09a6-46c9-90bd-24aa28a33c68@f9941",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "1aba4484-e6ea-45f2-bea0-0a3a56ee5a12@f9941",
+        "__uuid__": "885d5213-d211-4d15-8128-3670c59f5370@f9941",
         "__expectedType__": "cc.SpriteFrame"
       }
     ]

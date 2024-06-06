@@ -1,7 +1,8 @@
-import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director } from 'cc'
+import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director, Animation, misc, Vec2, input, EventKeyboard, KeyCode, Input } from 'cc'
 const { ccclass, property } = _decorator
 import { EventMgr } from '../Utils/EventMgr'
 import { Config } from '../Utils/Config'
+import { bulletsCtr } from './controller/bulletsCtr'
 const currentScene = director.getScene()
 @ccclass('CharacterController')
 export class CharacterController extends Component {
@@ -9,7 +10,8 @@ export class CharacterController extends Component {
     private characterNode: Node = null!
     // @property(Number)
     /**速度比例 */
-    private RoleSpeed: number = 10
+    private RoleSpeed: number = 1
+    private ani_name_now: string = ""
     /**
      * 方向
      */
@@ -17,7 +19,10 @@ export class CharacterController extends Component {
     onLoad(): void {
         EventMgr.on('CharacterMove', this.reciveDirect, this)
     }
+
+
     protected start(): void {
+        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this)
         this.schedule(this.moveCharacter.bind(this), 0.01)
     }
     /**
@@ -29,12 +34,31 @@ export class CharacterController extends Component {
     reciveDirect(direction: Vec3) {
         this.direction = direction
     }
-
+    public onKeyDown(event: EventKeyboard) {
+        console.info("onKeyDown", event);
+        // switch (event.keyCode) {
+        //     case KeyCode.KEY_J:
+        //         this.sendBullet()
+        //         break;
+        // }
+    }
 
 
     moveCharacter() {
-        let direction = this.direction
+        let ani_name = ""
+        let direction = this.direction.clone()
+        if (direction.x == 0 && direction.y == 0) {
+            ani_name = "boy_0"
+            this.ani_name_now = ani_name
+            this.characterNode.getComponent(Animation).play(ani_name)
+            return
+        }
         let dir = this.getDircter()
+        ani_name = this.getRoleAni(dir)
+        if (this.ani_name_now != ani_name) {
+            this.ani_name_now = ani_name
+            this.characterNode.getComponent(Animation).play(ani_name)
+        }
         let speedX = dir[0]
         let speedY = dir[1]
         direction.x = speedX * this.RoleSpeed
@@ -73,5 +97,30 @@ export class CharacterController extends Component {
         }
         return dir
     }
+    getRoleAni(dir: number[]) {
+        let ani_name = 0
+        if (dir[0] >= 1) ani_name = 4
+        if (dir[0] <= -1) ani_name = 3
+        if (dir[1] >= 1 && this.direction.x >= -40 && this.direction.x <= 40) {
+            ani_name = 2
+        }
+        if (dir[1] <= -1 && this.direction.x >= -40 && this.direction.x <= 40) {
+            ani_name = 1
+        }
+        if (dir[0] == 0 && dir[1] == 0) {
+            ani_name = 0
+        }
+        return "boy_" + ani_name
+    }
+    /**
+     * 发射子弹
+     */
+    private sendBullet() {
+        let dir = new Vec3()
+        dir.x = this.getDircter()[0]
+        dir.x = this.getDircter()[1]
+        bulletsCtr.Intsance.createBullet(this.node.worldPosition, dir)
+    }
+
 
 }
