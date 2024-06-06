@@ -1,59 +1,77 @@
 import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director } from 'cc'
 const { ccclass, property } = _decorator
-import { EventMgr } from '../tools/EventMgr'
+import { EventMgr } from '../Utils/EventMgr'
+import { Config } from '../Utils/Config'
 const currentScene = director.getScene()
 @ccclass('CharacterController')
 export class CharacterController extends Component {
     @property(Node)
     private characterNode: Node = null!
     // @property(Number)
-    // private moveSpeed: number = 1
-    @property(Number)
-    private characterRadius: number = 50
-    private touchStartPos: Vec3 = new Vec3()
-    private touchEndPos: Vec3 = new Vec3()
-    private touchInProgress: boolean = false
-
+    /**速度比例 */
+    private RoleSpeed: number = 10
+    /**
+     * 方向
+     */
+    private direction: Vec3 = new Vec3()
     onLoad(): void {
-        // this.node.on(Node.EventType.TOUCH_START, this.onTouchStart, this)
-        // this.node.on(Node.EventType.TOUCH_MOVE, this.onTouchMove, this)
-        // this.node.on(Node.EventType.TOUCH_END, this.onTouchEnd, this)
-        EventMgr.on('CharacterMove', this.moveCharacter, this)
+        EventMgr.on('CharacterMove', this.reciveDirect, this)
+    }
+    protected start(): void {
+        this.schedule(this.moveCharacter.bind(this), 0.01)
+    }
+    /**
+ * Receives a direction vector and performs an action based on it.
+ *
+ * @param {Vec3} direction - The direction vector to receive.
+ * @return {void} This function does not return anything.
+ */
+    reciveDirect(direction: Vec3) {
+        this.direction = direction
     }
 
-    // onTouchStart(touch: EventTouch) {
-    //     this.touchStartPos.x = touch.getLocationX()
-    //     this.touchStartPos.y = touch.getLocationY()
-    //     this.touchInProgress = true
-    // }
 
-    // onTouchMove(touch: EventTouch) {
-    //     if (!this.touchInProgress) return
-    //     this.touchEndPos.x = touch.getLocationX()
-    //     this.touchEndPos.y = touch.getLocationY()
-    //     let direction = this.touchEndPos.subtract(this.touchStartPos).normalize()
-    //     this.moveCharacter(direction)
-    // }
 
-    // onTouchEnd(touch: EventTouch) {
-    //     this.touchInProgress = false
-    // }
-
-    moveCharacter(direction: Vec3) {
-        let pos = this.characterNode.position
+    moveCharacter() {
+        let direction = this.direction
+        let dir = this.getDircter()
+        let speedX = dir[0]
+        let speedY = dir[1]
+        direction.x = speedX * this.RoleSpeed
+        direction.y = speedY * this.RoleSpeed
+        let pos = this.characterNode.worldPosition
         let newPos = pos.clone()
-        let uitrans = this.node.getComponent(UITransform)
         newPos.add(direction)
-        newPos.x = Math.max(this.characterRadius, Math.min(uitrans.width - this.characterRadius, newPos.x))
-        newPos.y = Math.max(this.characterRadius, Math.min(uitrans.height - this.characterRadius, newPos.y))
+        newPos.x = Math.max(0, Math.min(Config.ScreenWidth, newPos.x))
+        newPos.y = Math.max(0, Math.min(Config.ScreenHeight, newPos.y))
         newPos.z = 0
-        if (newPos.x >= this.characterRadius && newPos.x <= uitrans.width - this.characterRadius &&
-            newPos.y >= this.characterRadius && newPos.y <= uitrans.height - this.characterRadius) {
-            this.characterNode.position = newPos
+        this.characterNode.setWorldPosition(newPos)
+    }
+    /**
+ * Retrieves the current direction of the character.
+ *
+ * @return {Vec3} The current direction of the character.
+ */
+    getDircter() {
+        let dir = []
+        let direction = this.direction
+        let x = direction.x
+        if (x > 0) {
+            dir.push(1)
+        } else if (x < 0) {
+            dir.push(-1)
+        } else {
+            dir.push(0)
         }
+        let y = direction.y
+        if (y > 0) {
+            dir.push(1)
+        } else if (y < 0) {
+            dir.push(-1)
+        } else {
+            dir.push(0)
+        }
+        return dir
     }
 
-    private getDeltaTime(): number {
-        return director.getDeltaTime()
-    }
 }

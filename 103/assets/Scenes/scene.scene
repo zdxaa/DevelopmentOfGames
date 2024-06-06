@@ -316,7 +316,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "green_boxTick",
+    "_name": "role",
     "_objFlags": 0,
     "__editorExtras__": {},
     "_parent": {
@@ -374,8 +374,8 @@
     "__prefab": null,
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 150,
-      "height": 300
+      "width": 64,
+      "height": 64
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -405,7 +405,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "1269f39d-b3e2-4f42-b871-0f689f30c65d@f9941",
+      "__uuid__": "805600f1-b996-4629-a5f5-7ae0ca7681cb@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -458,8 +458,6 @@
     "characterNode": {
       "__id__": 7
     },
-    "moveSpeed": 200,
-    "characterRadius": 50,
     "_id": "1d73FR0F5Oqow2qU8dt18b"
   },
   {

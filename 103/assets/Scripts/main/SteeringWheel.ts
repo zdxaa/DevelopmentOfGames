@@ -1,5 +1,5 @@
 import { _decorator, Component, Node, Vec2, Vec3, UITransform, EventTouch, tween } from 'cc';
-import { EventMgr } from '../tools/EventMgr';
+import { EventMgr } from '../Utils/EventMgr';
 const { ccclass, property } = _decorator;
 
 @ccclass('TouchController')
@@ -32,6 +32,7 @@ export class TouchController extends Component {
             this.startTouchPos = new Vec2(touchPos.x, touchPos.y);
             this.touchInProgress = true;
             this.smallCircle!.setWorldPosition(new Vec3(touchPos.x, touchPos.y, 0));
+            this.moveCharacter(new Vec3(this.startTouchPos!.x - circlePos!.x, this.startTouchPos!.y - circlePos!.y));
         }
     }
 
@@ -54,7 +55,7 @@ export class TouchController extends Component {
         // Move small circle to clamped position
         this.smallCircle!.setWorldPosition(clampedPos);
 
-        this.moveCharacter(new Vec3(clampedPos.x - this.startTouchPos!.x, clampedPos.y - this.startTouchPos!.y));
+        this.moveCharacter(new Vec3(clampedPos.x - circlePos!.x, clampedPos.y - circlePos!.y));
     }
 
 
@@ -64,14 +65,16 @@ export class TouchController extends Component {
         this.touchInProgress = false;
         // Move small circle back to original position
         const originalPos = new Vec3(0, 0, 0);
+        this.moveCharacter(new Vec3(0, 0, 0))
         tween(this.smallCircle)
-            .to(0.1, { position: originalPos })
+            .to(0.05, { position: originalPos })
             .start();
     }
     moveCharacter(direction: Vec3) {
         // Implement character movement based on direction vector
         // This could involve setting velocity, moving a position directly, etc.
         // For now, we'll just log the direction
+        console.info("CharacterMove", direction)
         EventMgr.emit('CharacterMove', direction);
     }
 }
