@@ -35,12 +35,11 @@ export class CharacterController extends Component {
         this.direction = direction
     }
     public onKeyDown(event: EventKeyboard) {
-        console.info("onKeyDown", event);
-        // switch (event.keyCode) {
-        //     case KeyCode.KEY_J:
-        //         this.sendBullet()
-        //         break;
-        // }
+        switch (event.keyCode) {
+            case KeyCode.KEY_J:
+                this.sendBullet()
+                break;
+        }
     }
 
 
@@ -116,10 +115,7 @@ export class CharacterController extends Component {
      * 发射子弹
      */
     private sendBullet() {
-        let dir = new Vec3()
-        dir.x = this.getDircter()[0]
-        dir.x = this.getDircter()[1]
-        bulletsCtr.Intsance.createBullet(this.node.worldPosition, dir)
+        bulletsCtr.Intsance.createBullet(this.characterNode.worldPosition, this.direction)
     }
 
 

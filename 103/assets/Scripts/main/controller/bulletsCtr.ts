@@ -25,8 +25,8 @@ export class bulletsCtr extends Component {
         let bsp = bullet.getComponent(Sprite)
         if (!bsp)
             bullet.addComponent(Sprite).spriteFrame = this.bulletsSp
-        bullet.setWorldPosition(pos)
         this.node.addChild(bullet)
+        bullet.setWorldPosition(pos)
         let bObj = {
             node: bullet,
             dir: dir
@@ -38,7 +38,7 @@ export class bulletsCtr extends Component {
         if (this.bulletsObj.length == 0) return
         for (let i = 0; i < this.bulletsObj.length; i++) {
             let bObj = this.bulletsObj[i]
-            bObj.node.setPosition(bObj.node.position.x + bObj.dir.x, bObj.node.position.y + bObj.dir.y)
+            bObj.node.setPosition(bObj.node.position.x + bObj.dir.x / 10, bObj.node.position.y + bObj.dir.y / 10)
         }
     }
 }
