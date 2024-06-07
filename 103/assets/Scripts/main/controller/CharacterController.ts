@@ -11,7 +11,10 @@ export class CharacterController extends Component {
     // @property(Number)
     /**速度比例 */
     private RoleSpeed: number = 1
+    /**正在播*/
     private ani_name_now: string = ""
+    /**下一个播 */
+    private ani_name_next: string = ""
     /**
      * 方向
      */
@@ -22,17 +25,18 @@ export class CharacterController extends Component {
     private dirBullet: Vec3 = new Vec3()
     onLoad(): void {
         PhysicsSystem2D.instance.enable = true;
-        PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
-            EPhysics2DDrawFlags.Pair |
-            EPhysics2DDrawFlags.CenterOfMass |
-            EPhysics2DDrawFlags.Joint |
-            EPhysics2DDrawFlags.Shape;
+        // PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
+        //     EPhysics2DDrawFlags.Pair |
+        //     EPhysics2DDrawFlags.CenterOfMass |
+        //     EPhysics2DDrawFlags.Joint |
+        //     EPhysics2DDrawFlags.Shape;
         // 注册单个碰撞体的回调函数
         let collider = this.getComponent(Collider2D);
         if (collider) {
             collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
         EventMgr.on('CharacterMove', this.reciveDirect, this)
+        EventMgr.on('sendBullet', this.sendBullet, this)
     }
     private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // 只在两个碰撞体开始接触时被调用一次
@@ -49,8 +53,9 @@ export class CharacterController extends Component {
  * @param {Vec3} direction - The direction vector to receive.
  * @return {void} This function does not return anything.
  */
-    reciveDirect(direction: Vec3) {
+    reciveDirect(direction: Vec3, haveDir: boolean = false, recieDir: number = -1) {
         this.direction = direction
+        this.playRoleAni(haveDir, recieDir)
         if (direction.x !== 0 && direction.y !== 0) {
             this.dirBullet = direction
         }
@@ -63,8 +68,7 @@ export class CharacterController extends Component {
         }
     }
 
-
-    moveCharacter() {
+    playRoleAni(haveDir = false, index = -1) {
         let ani_name = ""
         let direction = this.direction.clone()
         if (direction.x == 0 && direction.y == 0) {
@@ -74,11 +78,15 @@ export class CharacterController extends Component {
             return
         }
         let dir = this.getDircter()
-        ani_name = this.getRoleAni(dir)
+        ani_name = haveDir ? "boy_" + index : this.getRoleAni(dir)
         if (this.ani_name_now != ani_name) {
             this.ani_name_now = ani_name
             this.characterNode.getComponent(Animation).play(ani_name)
         }
+    }
+    moveCharacter() {
+        let direction = this.direction.clone()
+        let dir = this.getDircter()
         let speedX = dir[0]
         let speedY = dir[1]
         direction.x = speedX * this.RoleSpeed

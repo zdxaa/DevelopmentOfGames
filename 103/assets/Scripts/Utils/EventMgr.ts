@@ -12,7 +12,7 @@ export class EventMgr extends Component {
         eventTarget.off(type, callback, target);
     }
     // 事件派发
-    static emit(type: string, data: any = null) {
-        eventTarget.emit(type, data);
+    static emit(type: string, ...data) {
+        eventTarget.emit(type, ...data);
     }
 }
