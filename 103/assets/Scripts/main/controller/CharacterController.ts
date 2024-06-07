@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director, Animation, misc, Vec2, input, EventKeyboard, KeyCode, Input } from 'cc'
+import { _decorator, Component, Node, Vec3, UITransform, EventTouch, tween, director, Animation, misc, Vec2, input, EventKeyboard, KeyCode, Input, Collider2D, Contact2DType, IPhysics2DContact, PhysicsSystem2D, EPhysics2DDrawFlags } from 'cc'
 import { EventMgr } from '../../Utils/EventMgr'
 import { Config } from '../../Utils/Config'
 import { bulletsCtr } from './bulletsCtr'
@@ -16,10 +16,28 @@ export class CharacterController extends Component {
      * 方向
      */
     private direction: Vec3 = new Vec3()
+    /**
+     * 子弹最后的方向
+     */
+    private dirBullet: Vec3 = new Vec3()
     onLoad(): void {
+        PhysicsSystem2D.instance.enable = true;
+        PhysicsSystem2D.instance.debugDrawFlags = EPhysics2DDrawFlags.Aabb |
+            EPhysics2DDrawFlags.Pair |
+            EPhysics2DDrawFlags.CenterOfMass |
+            EPhysics2DDrawFlags.Joint |
+            EPhysics2DDrawFlags.Shape;
+        // 注册单个碰撞体的回调函数
+        let collider = this.getComponent(Collider2D);
+        if (collider) {
+            collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+        }
         EventMgr.on('CharacterMove', this.reciveDirect, this)
     }
-
+    private onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        // 只在两个碰撞体开始接触时被调用一次
+        console.log('onBeginContact');
+    }
 
     protected start(): void {
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this)
@@ -33,6 +51,9 @@ export class CharacterController extends Component {
  */
     reciveDirect(direction: Vec3) {
         this.direction = direction
+        if (direction.x !== 0 && direction.y !== 0) {
+            this.dirBullet = direction
+        }
     }
     public onKeyDown(event: EventKeyboard) {
         switch (event.keyCode) {
@@ -115,7 +136,7 @@ export class CharacterController extends Component {
      * 发射子弹
      */
     private sendBullet() {
-        bulletsCtr.Intsance.createBullet(this.characterNode.worldPosition, this.direction)
+        bulletsCtr.Intsance.createBullet(this.characterNode.worldPosition, this.dirBullet)
     }
 
 

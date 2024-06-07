@@ -1,4 +1,21 @@
 {
   "__version__": "1.0.6",
-  "custom_joint_texture_layouts": []
+  "custom_joint_texture_layouts": [],
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "bullet"
+      },
+      {
+        "index": 2,
+        "name": "monster"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 0,
+      "1": 4,
+      "2": 2
+    }
+  }
 }
