@@ -56,8 +56,12 @@ export class CharacterController extends Component {
     reciveDirect(direction: Vec3, haveDir: boolean = false, recieDir: number = -1) {
         this.direction = direction
         this.playRoleAni(haveDir, recieDir)
-        if (direction.x !== 0 && direction.y !== 0) {
+        if (direction.x !== 0 || direction.y !== 0) {
             this.dirBullet = direction
+            if (haveDir) {
+                this.dirBullet.x *= 10
+                this.dirBullet.y *= 10
+            }
         }
     }
     public onKeyDown(event: EventKeyboard) {

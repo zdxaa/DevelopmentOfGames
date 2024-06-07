@@ -62,17 +62,18 @@ export class TouchController extends Component {
         }
         this.pressKey = [...new Set(this.pressKey)]
         let moveDirection = new Vec3(0, 0, 0);
+        let speed = 10
         if (this.pressKey.indexOf(KeyCode.KEY_W) != -1) {
-            moveDirection.y += 3
+            moveDirection.y += speed
         }
         if (this.pressKey.indexOf(KeyCode.KEY_S) != -1) {
-            moveDirection.y -= 3
+            moveDirection.y -= speed
         }
         if (this.pressKey.indexOf(KeyCode.KEY_A) != -1) {
-            moveDirection.x -= 3
+            moveDirection.x -= speed
         }
         if (this.pressKey.indexOf(KeyCode.KEY_D) != -1) {
-            moveDirection.x += 3
+            moveDirection.x += speed
         }
 
         let index = RoleAni.default
