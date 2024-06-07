@@ -56,7 +56,7 @@ export class RandomMoveCharacter extends Component {
         // 更新角色位置
         let newPos = nowPos.add(direction);
         let PosWorld = this.node.getComponent(UITransform).convertToWorldSpaceAR(newPos)
-        let newPosWorld = new Vec3(Math.max(0, Math.min(Config.ScreenWidth, PosWorld.x)), Math.max(0, Math.min(Config.ScreenHeight, PosWorld.y)), 0)
+        let newPosWorld = Config.RoleWorldPos//new Vec3(Math.max(0, Math.min(Config.ScreenWidth, PosWorld.x)), Math.max(0, Math.min(Config.ScreenHeight, PosWorld.y)), 0)
         newPos = this.node.getComponent(UITransform).convertToNodeSpaceAR(newPosWorld)
         this.stopMoveTween()
         this.moveTween = tween(this.node)

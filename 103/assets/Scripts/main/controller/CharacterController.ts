@@ -101,6 +101,7 @@ export class CharacterController extends Component {
         newPos.x = Math.max(0, Math.min(Config.ScreenWidth, newPos.x))
         newPos.y = Math.max(0, Math.min(Config.ScreenHeight, newPos.y))
         newPos.z = 0
+        Config.RoleWorldPos = newPos
         this.characterNode.setWorldPosition(newPos)
     }
     /**

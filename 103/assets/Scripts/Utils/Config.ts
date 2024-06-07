@@ -1,6 +1,9 @@
+import { Vec3 } from "cc"
+
 export class Config {
     public static ScreenWidth: number = 1280
     public static ScreenHeight: number = 720
+    public static RoleWorldPos = new Vec3(0, 0, 0)
 
 }
 /**角色朝向*/
